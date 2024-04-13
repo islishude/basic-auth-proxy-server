@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 func main() {
@@ -64,7 +65,21 @@ func main() {
 			return
 		}
 
-		resp, err := http.Get(target)
+		timeout := 3 * time.Second
+		if t := config.Backend.HealthCheckTimeoutInSecond; t != 0 {
+			timeout = time.Duration(t) * time.Second
+		}
+
+		newctx, cancel := context.WithTimeout(context.Background(), timeout)
+		defer cancel()
+
+		req, err := http.NewRequestWithContext(newctx, http.MethodGet, target, nil)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadGateway), http.StatusBadGateway)
+			return
+		}
+
+		resp, err := http.DefaultClient.Do(req)
 		if err == nil {
 			defer resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {

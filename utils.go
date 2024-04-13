@@ -14,6 +14,8 @@ type Backend struct {
 	Target    string `json:"target" yaml:"target"`
 	Readiness string `json:"readiness" yaml:"readiness"`
 	Liveness  string `json:"liveness" yaml:"liveness"`
+
+	HealthCheckTimeoutInSecond int64 `json:"health_check_timeout_in_second" yaml:"health_check_timeout_in_second"`
 }
 
 type Config struct {

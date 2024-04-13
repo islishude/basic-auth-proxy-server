@@ -27,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	remote, err := url.Parse(config.Backend)
+	remote, err := url.Parse(config.Backend.Target)
 	if err != nil {
 		slog.Error("failed to remote server", "backend", config.Backend, "err", err)
 		os.Exit(1)
@@ -46,7 +46,18 @@ func main() {
 		}
 	}
 
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {})
+	http.HandleFunc("/-/ready", func(w http.ResponseWriter, r *http.Request) {
+		readiness := remote.JoinPath(config.Backend.Readiness)
+		resp, err := http.Get(readiness.String())
+		if err == nil {
+			defer resp.Body.Close()
+			if resp.StatusCode == http.StatusOK {
+				return
+			}
+		}
+		http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
+	})
+
 	http.HandleFunc("/", handler(httputil.NewSingleHostReverseProxy(remote)))
 
 	slog.Info("proxying", "server", remote, "port", config.Port)

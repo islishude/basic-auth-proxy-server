@@ -10,9 +10,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type Backend struct {
+	Target    string `json:"target" yaml:"target"`
+	Readiness string `json:"readiness" yaml:"readiness"`
+}
+
 type Config struct {
 	Port    uint16            `json:"port" yaml:"port"`
-	Backend string            `json:"backend" yaml:"backend"`
+	Backend *Backend          `json:"backend" yaml:"backend"`
 	Users   map[string]string `json:"users" yaml:"users"`
 }
 

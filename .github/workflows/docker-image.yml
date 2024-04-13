@@ -54,3 +54,5 @@ jobs:
           sbom: true
           provenance: true
           platforms: linux/amd64,linux/arm64
+          target: dist
+          no-cache-filters: dist

@@ -13,6 +13,7 @@ import (
 type Backend struct {
 	Target    string `json:"target" yaml:"target"`
 	Readiness string `json:"readiness" yaml:"readiness"`
+	Liveness  string `json:"liveness" yaml:"liveness"`
 }
 
 type Config struct {

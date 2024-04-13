@@ -46,9 +46,24 @@ func main() {
 		}
 	}
 
-	http.HandleFunc("/-/ready", func(w http.ResponseWriter, r *http.Request) {
-		readiness := remote.JoinPath(config.Backend.Readiness)
-		resp, err := http.Get(readiness.String())
+	http.HandleFunc("GET /-/", func(w http.ResponseWriter, r *http.Request) {
+		var target string
+		switch r.URL.Path {
+		case "/-/ready":
+			if config.Backend.Readiness == "" {
+				return
+			}
+			target = remote.JoinPath(config.Backend.Readiness).String()
+		case "/-/healthy":
+			if config.Backend.Liveness == "" {
+				return
+			}
+			target = remote.JoinPath(config.Backend.Liveness).String()
+		default:
+			return
+		}
+
+		resp, err := http.Get(target)
 		if err == nil {
 			defer resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {

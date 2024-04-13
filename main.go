@@ -37,6 +37,7 @@ func main() {
 		return func(w http.ResponseWriter, r *http.Request) {
 			user, pass, ok := r.BasicAuth()
 			if ok && VerifyUserPass(config.Users, user, pass) {
+				slog.Info("New request", "user", user, "host", r.Host, "path", r.URL.Path)
 				r.Host = remote.Host
 				p.ServeHTTP(w, r)
 			} else {

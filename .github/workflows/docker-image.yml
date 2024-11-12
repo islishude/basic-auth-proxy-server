@@ -43,7 +43,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         id: docker-build
-        timeout-minutes: 10
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker-meta.outputs.tags }}

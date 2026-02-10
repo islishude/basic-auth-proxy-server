@@ -7,7 +7,7 @@ import (
 	"path"
 
 	"golang.org/x/crypto/bcrypt"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v4"
 )
 
 type Backend struct {

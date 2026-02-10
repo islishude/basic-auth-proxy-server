@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -15,6 +16,7 @@ func newBasicAuthHandler(proxy *httputil.ReverseProxy, remote *url.URL, users ma
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, pass, ok := r.BasicAuth()
 		if ok && VerifyUserPass(users, user, pass) {
+			slog.Info("request", "user", user, "method", r.Method, "host", r.Host, "path", r.URL.Path)
 			r.Host = remote.Host
 			proxy.ServeHTTP(w, r)
 			return

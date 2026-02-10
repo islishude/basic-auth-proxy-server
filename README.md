@@ -26,12 +26,12 @@ Example `config.yaml`:
 ```yaml
 port: 8080
 backend:
-	target: http://localhost:9090
-	readiness: /-/ready
-	liveness: /-/healthy
-	health_check_timeout_in_second: 3
+  target: http://localhost:9090
+  readiness: /-/ready
+  liveness: /-/healthy
+  health_check_timeout_in_second: 3
 users:
-	admin: $2a$12$z7uIVo5/5bY4Zf7nT4z6tO0K0c0vX1m/K1gI0u6fM0T1FSe2Kx02S
+  admin: $2a$12$z7uIVo5/5bY4Zf7nT4z6tO0K0c0vX1m/K1gI0u6fM0T1FSe2Kx02S
 ```
 
 Notes:
@@ -43,7 +43,8 @@ Notes:
 Generate a bcrypt hash:
 
 ```bash
-python - <<'PY'
+pip3 install bcrypt
+python3 - <<'PY'
 import bcrypt
 print(bcrypt.hashpw(b'mypassword', bcrypt.gensalt()).decode())
 PY
